@@ -173,6 +173,7 @@ function StruggleState() {
 		if (this.cooldown > 0)
 			this.cooldown--;		
 		else if (jaws.pressed("space")) {
+			GlobalData.aggression = true;
 			this.cooldown = 15;
 			this.createShot();
 		}

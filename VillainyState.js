@@ -312,8 +312,9 @@ function VillainyState() {
 			else
 				this.player.setImage(jaws.assets.get("wizard_idle_left.png"));
 		}
-		if (this.moveAlong == true)
+		if (this.moveAlong == true) {
 			jaws.switchGameState(ReceiptState);
+		}
 	}
 	
 	this.draw = function() {

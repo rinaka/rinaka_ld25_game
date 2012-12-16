@@ -10,6 +10,7 @@ var GlobalData = (function() {
 	mo.sword = false;
 	mo.heroDefeated = false;
 	mo.playerDefeated = false;
+	mo.aggression = false;
 	mo.hardWin = false;
 	
 	mo.initialize = function() {
@@ -19,6 +20,7 @@ var GlobalData = (function() {
 		this.sword = false;
 		this.heroDefeated = false;
 		this.playerDefeated = false;
+		this.aggression = false;
 		this.hardWin = false;
 	}
 	
