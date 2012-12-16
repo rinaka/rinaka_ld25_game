@@ -306,9 +306,12 @@ function VillainyState() {
 		}
 		if (this.player.moving)
 			this.player.setImage(this.playerAnim[this.player.dir].next());
-		else
-			this.player.setImage(jaws.assets.get("wizard_idle.png"));
-			
+		else {
+			if (this.player.dir < 2)
+				this.player.setImage(jaws.assets.get("wizard_idle_right.png"));
+			else
+				this.player.setImage(jaws.assets.get("wizard_idle_left.png"));
+		}
 		if (this.moveAlong == true)
 			jaws.switchGameState(ReceiptState);
 	}

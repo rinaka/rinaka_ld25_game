@@ -8,7 +8,8 @@ function TitleState() {
 	this.update = function() {
 		this.dt += jaws.game_loop.tick_duration;
 		if (jaws.pressed("space") && this.dt > 1000)
-			jaws.switchGameState(TransitionState01);
+			//jaws.switchGameState(TransitionState01);
+			jaws.switchGameState(TransitionState02);
 		else if (jaws.pressed("tab") && this.dt > 1000)
 			jaws.switchGameState(CreditsState);
 	}
