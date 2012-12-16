@@ -5,8 +5,11 @@
 		<script type="text/javascript" src="AudioHelper.js"></script>
 		<script type="text/javascript" src="BitmapFont.js"></script>
 		<script type="text/javascript" src="GlobalData.js"></script>
+		<script type="text/javascript" src="Utils.js"></script>
 		<script type="text/javascript" src="TitleState.js"></script>
 		<script type="text/javascript" src="TransitionState01.js"></script>
+		<script type="text/javascript" src="DonorState.js"></script>
+		<script type="text/javascript" src="VillainyState.js"></script>
 		<script type="text/javascript" src="ReceiptState.js"></script>
 		<script type="text/javascript" src="TransitionState02.js"></script>
 		<script type="text/javascript" src="StruggleState.js"></script>
@@ -18,8 +21,12 @@
 		</div>
 		<script>
 			jaws.onload = function() {
-				jaws.assets.add(["font_white_16.png"]);
+				jaws.assets.add(["font_white_16.png", "bkg00.png", "house.png", "fire.png", 
+				"wizard_idle.png", "wizard_right.png", "wizard_left.png", "shot.png", 
+				"villager01.png", "villager02.png", "villager03.png", "villager04.png",
+				"panic01.png", "panic02.png", "panic03.png", "panic04.png", "stone.png"]);
 				jaws.preventDefaultKeys(["up", "down", "left", "right", "space"]);
+				GlobalData.initialize();
 				jaws.start(TitleState);
 			}
 		</script>

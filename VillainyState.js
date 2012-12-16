@@ -40,6 +40,126 @@ function VillainyState() {
 		this.houses.push(spr);
 	}
 	
+	function updateVillager() {
+		if (this.dead == false) {
+			if (this.scared == false) {
+				switch(this.state) {
+					// target definition
+					case 0:
+						this.targetX = Utils.randBetween(80, 430);
+						this.targetY = Utils.randBetween(144, 240);
+						this.state = 1;
+					// motion planning
+					case 1:
+						var dx = Math.abs(this.x - this.targetX);
+						var dy = Math.abs(this.y - this.targetY);
+						if (dx > 0 && dy > 0) {
+							if (Math.random() > 0.5)
+								this.state = 2;
+							else
+								this.state = 3;
+						}
+						else if (dx > 0) {
+							this.state = 2;
+						}
+						else if (dy > 0) {
+							this.state = 3;
+						}
+						else {
+							this.state = 0;
+						}
+						break;
+					// horizontal movement
+					case 2:
+						if (this.x < this.targetX) {
+							this.x += 2;
+							if (this.x >= this.targetX) {
+								this.x = this.targetX;
+								this.state = 1;
+							}
+						}
+						else {
+							this.x -= 2;
+							if (this.x <= this.targetX) {
+								this.x = this.targetX;
+								this.state = 1;
+							}
+						}
+						break;
+					// vertical movement
+					case 3:
+						if (this.y < this.targetY) {
+							this.y += 2;
+							if (this.y >= this.targetY) {
+								this.y = this.targetY;
+								this.state = 1;
+							}
+						}
+						else {
+							this.y -= 2;
+							if (this.y <= this.targetY) {
+								this.y = this.targetY;
+								this.state = 1;
+							}
+						}
+						break;
+				}
+			}
+			else {
+				switch(this.state) {
+					// target definition and planning
+					case 0:
+						this.targetX = Utils.randBetween(80, 430);
+						this.targetY = Utils.randBetween(144, 240);
+						var dx = this.x - this.targetX;
+						var dy = this.y - this.targetY;
+						var q = Math.sqrt(dx*dx + dy*dy);
+						if (q > 0) {
+							this.vx = -4*dx/q;
+							this.vy = -4*dy/q;
+							this.state = 1;
+						}
+						break;
+					// movement
+					case 1:
+						var dx = this.x - this.targetX;
+						var dy = this.y - this.targetY;
+						if ((dx*dx + dy*dy) < 16) {
+							this.x = Math.floor(this.x);
+							this.y = Math.floor(this.y);
+							this.state = 0;
+						}
+						else {
+							this.x += this.vx;
+							this.y += this.vy;
+						}
+						break;
+				}
+
+			}
+		}
+		if (this.dead == false)
+			this.setImage(this.anim.next());
+	}
+	
+	this.setupVillagers = function() {
+		var i;
+		this.villagers = new jaws.SpriteList();
+		this.stoneForm = new jaws.SpriteSheet({image: "stone.png", frame_size: [32,32], orientation: "right"});
+		for (i = 1; i < 5; i++) {
+			var v = new jaws.Sprite({x: Utils.randBetween(80, 430), y: Utils.randBetween(144, 240), anchor: "center_center"});
+			v.walk = new jaws.Animation({sprite_sheet: "villager0" + String(i) + ".png", frame_size: [32,32], frame_duration: 80});
+			v.panic = new jaws.Animation({sprite_sheet: "panic0" + String(i) + ".png", frame_size: [32,32], frame_duration: 80});
+			v.stone = this.stoneForm.frames[i-1];
+			v.anim = v.walk;
+			v.scared = false;
+			v.dead = false;
+			v.state = 0;
+			v.update = updateVillager;
+			this.villagers.push(v);
+		}
+	}
+	
 	this.setupShots = function() {
 		this.shotAnim = new jaws.Animation({sprite_sheet: "shot.png", frame_size: [16,16], frame_duration: 25});
 		this.shots = new jaws.SpriteList();
@@ -51,8 +171,10 @@ function VillainyState() {
 		
 		this.setupPlayer();
 		this.setupHouses();
+		this.setupVillagers();
 		this.setupShots();
 
+		this.panic = false;
 		this.dt = 0;
 	}
 
@@ -134,8 +256,31 @@ function VillainyState() {
 			this.shots.remove(p[0]);
 			if (p[1].destroyed == false) {
 				p[1].destroyed = true;
+				GlobalData.burnedHouses += 1;
 				var spr = new jaws.Sprite({ image: "fire.png", x: p[1].x, y: p[1].y, anchor: "bottom_center" });
 				this.fires.push(spr);
+				if (this.panic == false) {
+					this.panic = true;
+					this.villagers.forEach(function(e, i, a) { e.scared = true; e.anim = e.panic; e.state = 0;});
+				}
+			}
+		}
+	}
+	
+	this.collideShotsWithVillagers = function() {
+		var c = jaws.collideManyWithMany(this.shots, this.villagers);
+		var i;
+		for (i = 0; i < c.length; i++) {
+			var p = c[i];
+			this.shots.remove(p[0]);
+			if (p[1].dead == false) {
+				p[1].dead = true;
+				p[1].setImage(p[1].stone);
+				GlobalData.killedPeople += 1;
+				if (this.panic == false) {
+					this.panic = true;
+					this.villagers.forEach(function(e, i, a) { e.scared = true; e.anim = e.panic; e.state = 0;});
+				}
 			}
 		}
 	}
@@ -146,11 +291,14 @@ function VillainyState() {
 		while (this.dt >= 50) {
 			this.updatePlayer();
 			
+			this.villagers.update();
+			
 			this.shots.update();
 			this.shots.removeIf(jaws.isOutsideCanvas);
 			
 			this.collideShotsWithHouses();
-
+			this.collideShotsWithVillagers();
+			
 			this.dt -= 50;
 		}
 		if (this.player.moving)
@@ -165,10 +313,10 @@ function VillainyState() {
 		this.houses.draw();
 		this.fires.draw();
 		
+		this.villagers.draw();
+		
 		this.shots.draw();
 		
 		this.player.draw();
-		
-		this.fon.draw("HE EVEN KILLED OUR GOAT<<<", 10, 10);
 	}
 }
