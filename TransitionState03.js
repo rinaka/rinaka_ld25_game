@@ -10,7 +10,7 @@ function TransitionState03() {
 		this.alpha = this.dt/1000;
 		if (this.alpha > 1) this.alpha = 1;
 		if (this.dt >= 2000)
-			jaws.switchGameState(TitleState);
+			jaws.switchGameState(SolutionState);
 	}
 	
 	this.draw = function() {

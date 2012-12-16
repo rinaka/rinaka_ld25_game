@@ -163,7 +163,7 @@ function VillainyState() {
 	this.setupShots = function() {
 		this.shotAnim = new jaws.Animation({sprite_sheet: "shot.png", frame_size: [16,16], frame_duration: 25});
 		this.shots = new jaws.SpriteList();
-		this.cooldown = 0;
+		this.cooldown = 25;
 	}
 	
 	this.setup = function() {
@@ -175,6 +175,7 @@ function VillainyState() {
 		this.setupShots();
 
 		this.panic = false;
+		this.moveAlong = false;
 		this.dt = 0;
 	}
 
@@ -223,10 +224,12 @@ function VillainyState() {
 			this.player.moving = true;
 		}
 		
-		if (this.player.x < 0)
-			this.player.x = 0
-		else if (this.player.x > jaws.width)
-			this.player.x = jaws.width;
+		if (this.player.x < 16)
+			this.player.x = 16
+		else if (this.player.x > jaws.width-24) {
+			this.player.x = jaws.width-24;
+			this.moveAlong = true;
+		}
 		if (this.player.y < 0)
 			this.player.y = 0
 		else if (this.player.y > jaws.height)
@@ -305,6 +308,9 @@ function VillainyState() {
 			this.player.setImage(this.playerAnim[this.player.dir].next());
 		else
 			this.player.setImage(jaws.assets.get("wizard_idle.png"));
+			
+		if (this.moveAlong == true)
+			jaws.switchGameState(ReceiptState);
 	}
 	
 	this.draw = function() {
