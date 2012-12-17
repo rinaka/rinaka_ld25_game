@@ -33,7 +33,9 @@ var BitmapFont = (function() {
 		this.draw = function(tx, px, py) {
 			var i;
 			for (i = 0; i < tx.length; i++) {
-				jaws.context.drawImage(this.fbmp, 16*(tx.charCodeAt(i)-48), 0, this.cw, this.ch, px, py, this.cw, this.ch);
+				var c = tx.charCodeAt(i);
+				if (c > 47 && c < 91)
+					jaws.context.drawImage(this.fbmp, 16*(tx.charCodeAt(i)-48), 0, this.cw, this.ch, px, py, this.cw, this.ch);
 				px = px + this.cw;
 			}
 		}
