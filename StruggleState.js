@@ -1,3 +1,10 @@
+/*
+	This is part of the game "Sword of Truth"
+	created by Ricardo Nakamura for the Ludum Dare #25
+	
+	copyright 2012 Ricardo Nakamura
+	Released under the LGPL
+*/
 function StruggleState() {
 	this.setupPlayer = function() {
 		this.player = new jaws.Sprite({x:416, y:240, anchor: "center_center"});
@@ -77,10 +84,12 @@ function StruggleState() {
 		if (GlobalData.sword == true) {
 			this.hero.anim = new jaws.Animation({sprite_sheet: "hero02_right.png", frame_size: [32,32], frame_duration: 80});
 			this.hero.idle = jaws.assets.get("hero02_idle.png");
+			this.sname = "blast";
 		}
 		else {
 			this.hero.anim = new jaws.Animation({sprite_sheet: "hero01_right.png", frame_size: [32,32], frame_duration: 80});
 			this.hero.idle = jaws.assets.get("hero01_idle.png");
+			this.sname = "knife";
 		}
 		this.hero.state = 0;
 	}
@@ -128,6 +137,7 @@ function StruggleState() {
 		spr.vy = 0;
 		spr.update = updateShot;
 		this.shots.push(spr);
+		AudioHelper.get("evil_blast").play();
 	}	
 	
 	this.createHeroShot = function() {
@@ -137,6 +147,7 @@ function StruggleState() {
 		spr.vy = 0;
 		spr.update = updateShot;
 		this.heroShots.push(spr);
+		AudioHelper.get(this.sname).play();
 	}	
 	
 	this.updatePlayer = function() {
@@ -199,6 +210,7 @@ function StruggleState() {
 			for (i = 0; i < c.length; i++) {
 				this.shots.remove(c[i]);
 				this.hero.life -= 2;
+				AudioHelper.get("ouch").play();
 			}
 			
 			// collide player with hero shots
@@ -210,6 +222,7 @@ function StruggleState() {
 					this.player.life -= 20;
 				else
 					this.player.life -= 5;
+				AudioHelper.get("ugh").play();
 			}
 			
 			// check for end of game

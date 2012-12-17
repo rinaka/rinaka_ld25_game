@@ -1,3 +1,10 @@
+/*
+	This is part of the game "Sword of Truth"
+	created by Ricardo Nakamura for the Ludum Dare #25
+	
+	copyright 2012 Ricardo Nakamura
+	Released under the LGPL
+*/
 function TransitionState01() {
 	this.setup = function() {
 		this.fnt = new BitmapFont.BMFont("font_white_16.png", 16, 16);

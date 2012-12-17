@@ -1,3 +1,10 @@
+/*
+	This is part of the game "Sword of Truth"
+	created by Ricardo Nakamura for the Ludum Dare #25
+	
+	copyright 2012 Ricardo Nakamura
+	Released under the LGPL
+*/
 function VillainyState() {
 
 	this.setupPlayer = function() {
@@ -195,6 +202,7 @@ function VillainyState() {
 		}
 		spr.update = updateShot;
 		this.shots.push(spr);
+		AudioHelper.get("evil_blast").play();
 	}
 
 	this.updatePlayer = function() {
@@ -266,6 +274,7 @@ function VillainyState() {
 					this.panic = true;
 					this.villagers.forEach(function(e, i, a) { e.scared = true; e.anim = e.panic; e.state = 0;});
 				}
+				AudioHelper.get("explode").play();
 			}
 		}
 	}
@@ -284,6 +293,7 @@ function VillainyState() {
 					this.panic = true;
 					this.villagers.forEach(function(e, i, a) { e.scared = true; e.anim = e.panic; e.state = 0;});
 				}
+				AudioHelper.get("stone").play();
 			}
 		}
 	}

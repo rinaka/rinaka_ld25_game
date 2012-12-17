@@ -18,7 +18,7 @@
 		<script type="text/javascript" src="SolutionState.js"></script>
 		<script type="text/javascript" src="EndState.js"></script>
 	</head>
-	<body bgcolor="#000040">
+	<body bgcolor="#000040" text="#ffffff">
 		<div align="center">
 			<canvas id="myCanvas" width="512" height="384"></canvas>	
 		</div>
@@ -32,10 +32,33 @@
 				"panic01.png", "panic02.png", "panic03.png", "panic04.png", "stone.png",
 				"hero01_idle.png", "hero02_idle.png", "hero01_right.png", "hero02_right.png", 
 				"sword.png", "knife.png", "shot02.png" ]);
+				AudioHelper.add("blast");
+				AudioHelper.add("evil_blast");
+				AudioHelper.add("explode");
+				AudioHelper.add("knife");
+				AudioHelper.add("ouch");
+				AudioHelper.add("stone");
+				AudioHelper.add("ugh");
 				jaws.preventDefaultKeys(["up", "down", "left", "right", "space", "tab"]);
 				GlobalData.initialize();
 				jaws.start(TitleState);
 			}
 		</script>
+		
+		<div align="center">
+			<div style="align:center; width:512px">
+			<p style="text-align:justify; font-weight:bold">Information</p>
+			<p style="text-align:justify">This is my entry for Ludum Dare #25, which had the theme "You are the villain." I started brainstorming about the theme
+			and eventually started thinking about what defines a villain. Generally, a villain purposefully practices evil actions
+			(which in turn might depend on a specific moral code.) Some say that such villains only exist in fiction: people make
+			choices based on their needs and desires, not for the sake of "evil." This made me turn to the role of villains in fiction,
+			and my references were the narrative functions of Vladimir Propp. In Propp's functions, the villain often causes the hero
+			to move forward, and it is the confrontation with the villain that leads to the transformation of the hero. So I decided
+			to make this little game/interactive narrative that can be changed based on your actions as the villain. There are eight
+			different conclusions to the story.</p>
+			<p style="text-align:justify; font-weight:bold">How to play</p>
+			<p style="text-align:justify">Use the arrow keys to move. Press space to advance dialogues and to attack.</p>
+			</div>
+		</div>
 	</body>
 </html>
